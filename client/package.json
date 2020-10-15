@@ -15,6 +15,7 @@
     "webpack-dev-server": "^2.6.1"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "jest": "^26.2.2",
     "lodash-es": "^4.17.15",
     "vue": "^2.4.2",

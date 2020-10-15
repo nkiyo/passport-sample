@@ -1,15 +1,29 @@
 <template>
   <div id="app">
-    <p>hello {{ who }}</p>
-    <p>hello {{ reversedWho }}</p>
-    <!--  <p>vuex counter is {{ vuexCounter }}</p> -->
-    <button @click="onclick">hoge</button>
+    <label for="uname">Username</label>
+    <input v-model="username" type="text" placeholder="Enter Username" name="uname" required>
+    <br>
+
+    <label for="psw">Password</label>
+    <input v-model="password" type="password" placeholder="Enter Password" name="psw" required>
+    <br>
+
+    <button type="submit" @click="login">Login</button>
+    <br>
+
+    <button @click="callApi">Call API</button>
+    <br>
+
+    <!-- <p>hello {{ who }}</p> -->
+    <!-- <p>hello {{ reversedWho }}</p> -->
+    <!-- <button @click="onclick">hoge</button> -->
   </div>
 </template>
 
 <script>
 import {MyClass} from './myclass'
 import difference from 'lodash-es/difference'
+import axios from 'axios'
 import get from 'lodash-es/get'
 import set from 'lodash-es/set'
 export default {
@@ -17,8 +31,8 @@ export default {
   data: function() {
     return {
       who: "monk studio",
-      /** @type {{id: number, text: string}[]} */
-      items: []
+      username: "",
+      password: "",
     };
   },
   computed: {
@@ -31,13 +45,7 @@ export default {
   },
   methods: {
     onclick: function() {
-      this.$store.commit('increment')
-      //console.log(`vuex ${this.$store.state.count}`)
-      
       const mc = new MyClass(1, 2, 'hige')
-      this.items.push(123) // なんの警告もなし
-      //console.log(`${this.items.length}`)
-      //console.log(`${mc.getS()}`)
 
       // lodash-es sample
       console.log(`lodash-es difference ${difference([3, 2, 1], [1, 2])}`)
@@ -47,7 +55,30 @@ export default {
       console.log(`lodash-es get ${get(object, 'a[0].b.d')}`) // => undefined
       set(object, 'a[0].b.c', 4)
       console.log(`lodash-es set result ${get(object, 'a[0].b.c')}`) // => 4
-    }
+    },
+    login: function() {
+      console.log(`login clicked. username=${this.username} password=${this.password}`)
+      axios.post('http://localhost:8080/api/login', {}, {
+        auth: {
+          username: 'hoge',
+          password: 'hogepass',
+        }
+      }).then(res => {
+        console.log(`post done`)
+      }).catch(err => {
+        console.log(`post failed`)
+      })
+    },
+    callApi: function() {
+      console.log(`call api`)
+      axios.get('http://localhost:8080/api')
+        .then(res => {
+          console.log(`get ok`)
+        })
+        .catch(e => {
+          console.log(`get failed`)
+        })
+    },
   }
 };
 </script>

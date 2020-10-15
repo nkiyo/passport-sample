@@ -17,5 +17,19 @@ module.exports = {
       { test: /\.vue$/, use: 'vue-loader' }
     ]
   },
+  devServer: {
+    host: 'localhost',
+    port: 8080,
+    proxy: {
+      // https://github.com/webpack/webpack-dev-server/issues/458#issuecomment-243859936
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+  },
   devtool: 'eval-source-map' // ソースマップ有効
 }
