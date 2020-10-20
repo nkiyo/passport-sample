@@ -58,11 +58,11 @@ export default {
     },
     login: function() {
       console.log(`login clicked. username=${this.username} password=${this.password}`)
-      axios.post('http://localhost:8080/api/login', {}, {
-        auth: {
-          username: 'hoge',
-          password: 'hogepass',
-        }
+      axios.post('http://localhost:8080/api/login', {
+        //auth: {
+        username: 'hoge',
+        password: 'hogepass',
+        //}
       }).then(res => {
         console.log(`post done`)
       }).catch(err => {
