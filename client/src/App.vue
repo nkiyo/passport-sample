@@ -71,7 +71,7 @@ export default {
     },
     callApi: function() {
       console.log(`call api`)
-      axios.get('http://localhost:8080/api')
+      axios.get('http://localhost:8080/api', {withCredentials: true})
         .then(res => {
           console.log(`get ok`)
         })

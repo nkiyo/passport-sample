@@ -6,11 +6,21 @@ const session = require('express-session')
 
 const app = express()
 const port = 3000
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(cookieParser())
+app.use(session({
+  secret: 'passport test',
+  resave:false,
+  saveUninitialized:false,
+  //cookie: {
+  //  secure: true, // https://stackoverflow.com/a/23119369
+  //},
+}))
+
+// app.use 順序重要 https://github.com/passport/express-4.x-local-example/blob/master/server.js#L60
 app.use(passport.initialize())
-app.use(session({ resave:false,saveUninitialized:false, secret: 'passport test' }))
+app.use(passport.session()) // https://qiita.com/tinymouse/items/fa910bf80a038c7f9ccb
 
 const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy({ session: true },
@@ -33,6 +43,22 @@ passport.use(new LocalStrategy({ session: true },
 
 app.get('/', (req, res) => {
   console.log(`get`)
+  console.log(`### user:`)
+  console.log(`${JSON.stringify(req.user)}`)
+  console.log('### sessions')
+  console.log(req.sessionStore.sessions)
+  console.log('### cookies')
+  console.log(req.cookies)
+  if(req.user) {
+    console.log(`"${req.user.username}" is authed user`)
+  } else {
+    console.log(`NOT authed user`)
+  }
+  if(req.isAuthenticated()) {
+    console.log(`isAuthenticated`)
+  } else {
+    console.log(`NOT isAuthenticated`)
+  }
   res.json({msg: 'get ok'})
 })
 
@@ -54,7 +80,7 @@ passport.serializeUser(function(user, done) {
   done(null, user);
 });
 passport.deserializeUser(function(user, done) {
-  console.log(`deserializeUser`)
+  console.log(`### deserializeUser`)
   done(null, user);
 });
 
